@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AppGraphApplication<appgraph>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "ca.appgraph.AppGraphApplication",
+            "projectName": "appgraph",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
