@@ -7,7 +7,10 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 @Node("App")
+@JsonPropertyOrder({ "id", "name", "connectsTo" })
 public class App {
 
     @Id
@@ -17,14 +20,11 @@ public class App {
     private String name;
     
     @Relationship(type = "CONNECTS_TO", direction = Relationship.Direction.OUTGOING)
-    private List<ConnectsTo> outgoingConnections;
+    private List<ConnectsTo> connectsTo;
 
-    @Relationship(type = "CONNECTS_TO", direction = Relationship.Direction.INCOMING)
-    private List<ConnectsTo> incomingConnections;
-
-
-    public App() {
+     public App() {
     }
+
 
 
     public Long getId() {
@@ -43,25 +43,15 @@ public class App {
         this.name = name;
     }
 
+    public List<ConnectsTo> getConnectsTo() {
+        return connectsTo;
+    }
 
-    public List<ConnectsTo> getOutgoingConnections() {
-        return outgoingConnections;
+    public void setConnectsTo(List<ConnectsTo> connectsTos) {
+        this.connectsTo = connectsTos;
     }
 
 
-    public void setOutgoingConnections(List<ConnectsTo> outgoingConnections) {
-        this.outgoingConnections = outgoingConnections;
-    }
-
-
-    public List<ConnectsTo> getIncomingConnections() {
-        return incomingConnections;
-    }
-
-
-    public void setIncomingConnections(List<ConnectsTo> incomingConnections) {
-        this.incomingConnections = incomingConnections;
-    }
 
     
 }

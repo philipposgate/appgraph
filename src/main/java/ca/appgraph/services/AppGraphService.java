@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import ca.appgraph.neo4j.App;
 import ca.appgraph.neo4j.AppRepository;
@@ -15,7 +17,7 @@ public class AppGraphService {
 
     @Autowired
     private AppRepository appRepository;
-    
+
     public String getModelName() {
         return "Default model";
     }
@@ -43,21 +45,27 @@ public class AppGraphService {
         Optional<App> toOptional = findAppById(toId);
 
         if (fromOptional.isEmpty()) {
-            throw new RuntimeException("App with id " + fromId + " not found");
+            throw new ResponseStatusException(NOT_FOUND, "App with id " + fromId + " not found");
         }
         else if (toOptional.isEmpty()) {
-            throw new RuntimeException("App with id " + toId + " not found");
+            throw new ResponseStatusException(NOT_FOUND, "App with id " + toId + " not found");
         }
         else {
             App from = fromOptional.get();
             App to = toOptional.get();
 
+            if (from.getConnectsTo().stream().anyMatch(connection -> connection.getApp().getId().equals(toId))) {
+                throw new ResponseStatusException(NOT_FOUND, "Connection already exists");
+            }
+
             ConnectsTo connection = new ConnectsTo();
             connection.setApp(to);
-            if (from.getOutgoingConnections() == null) {
-                from.setOutgoingConnections(List.of(connection));
+
+            if (from.getConnectsTo() == null) {
+                from.setConnectsTo(List.of(connection));
             } 
-            from.getOutgoingConnections().add(connection);
+            
+            from.getConnectsTo().add(connection);
             appRepository.save(from);
         }
     }
