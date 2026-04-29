@@ -1,0 +1,3 @@
+@appId = 0
+GET http://localhost:8080/api/apps/{{appId}} HTTP/1.1
+Accept: application/json

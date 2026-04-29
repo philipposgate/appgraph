@@ -1,4 +1,4 @@
-package ca.appgraph.neo4j;
+package ca.appgraph.models;
 
 import java.util.List;
 
@@ -22,7 +22,11 @@ public class App {
     @Relationship(type = "CONNECTS_TO", direction = Relationship.Direction.OUTGOING)
     private List<ConnectsTo> connectsTo;
 
-     public App() {
+    @Relationship(type = "DEPLOYED_ON", direction = Relationship.Direction.OUTGOING)
+    private List<DeployedOn> deployments;
+
+
+    public App() {
     }
 
 
@@ -51,6 +55,13 @@ public class App {
         this.connectsTo = connectsTos;
     }
 
+    public List<DeployedOn> getDeployments() {
+        return deployments;
+    }
+
+    public void setDeployments(List<DeployedOn> deployedOn) {
+        this.deployments = deployedOn;
+    }
 
 
     

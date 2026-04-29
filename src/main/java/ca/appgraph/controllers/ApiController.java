@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.appgraph.neo4j.App;
+import ca.appgraph.models.App;
+import ca.appgraph.models.Environment;
+import ca.appgraph.models.Project;
 import ca.appgraph.services.AppGraphService;
+
 
 
 @RestController
@@ -23,13 +26,12 @@ public class ApiController {
     @Autowired
     private AppGraphService appGraphService;
 
-
     @GetMapping("/hello")
     public String hello() {
         return appGraphService.getModelName();
     }
 
-    @PostMapping("/app")
+    @PostMapping("/apps")
     public App createApp(@RequestBody App app) {
         return appGraphService.createApp(app.getName());
     }
@@ -44,19 +46,51 @@ public class ApiController {
         return appGraphService.findAppsByName(name);
     }   
 
-    @PutMapping("/app/{fromId}/connect/{toId}")
-    public void addConnection(@PathVariable Long fromId, @PathVariable Long toId) {
-        appGraphService.addConnection(fromId, toId);
+    @PutMapping("/apps/{fromId}/connect/{toId}")
+    public void addAppConnection(@PathVariable Long fromId, @PathVariable Long toId) {
+        appGraphService.addAppConnection(fromId, toId);
     }
 
-    @DeleteMapping("/app/{id}")
+    @DeleteMapping("/apps/{id}")
     public void deleteApp(@PathVariable Long id) {
         appGraphService.deleteApp(id);
     }
 
-    @GetMapping("/app/{id}")
+    @GetMapping("/apps/{id}")
     public App getApp(@PathVariable Long id) {
         return appGraphService.getAppById(id);
     }
 
+    @GetMapping("/projects")
+    public Iterable<Project> getProjects() {
+        return appGraphService.findAllProjects();
+    }
+    
+    @PostMapping("/projects")
+    public Project createProject(@RequestBody Project project) {
+        return appGraphService.createProject(project.getName());
+    }
+
+    @PutMapping("/projects/{projectId}/apps/{appId}")
+    public void addAppToProject(@PathVariable Long projectId, @PathVariable Long appId) {
+        appGraphService.addAppToProject(projectId, appId);
+    }
+
+    @DeleteMapping("/projects/{projectId}")
+    public void deleteProject(@PathVariable Long projectId) {
+        appGraphService.deleteProject(projectId);
+    }
+
+    @GetMapping("/projects/{projectId}")
+    public Project getProject(@PathVariable Long projectId) {
+        return appGraphService.getProjectById(projectId);
+    }
+
+    @PostMapping("/apps/{appId}/environments")
+    public App addEnvironmentToApp(@PathVariable Long appId, @RequestBody Environment env) {
+        
+        
+        return appGraphService.addEnvironmentToApp(appId, env.getType());
+    }
+    
 }

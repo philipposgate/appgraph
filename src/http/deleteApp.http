@@ -1,1 +1,0 @@
-DELETE http://localhost:8080/api/app/1 HTTP/1.1

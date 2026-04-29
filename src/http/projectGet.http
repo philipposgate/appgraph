@@ -1,0 +1,2 @@
+@projectId = 5
+GET http://localhost:8080/api/projects/{{projectId}} HTTP/1.1
