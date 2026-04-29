@@ -10,7 +10,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import ca.appgraph.models.App;
 import ca.appgraph.models.ConnectsTo;
-import ca.appgraph.models.DeployedOn;
 import ca.appgraph.models.Environment;
 import ca.appgraph.models.EnvironmentType;
 import ca.appgraph.models.Project;
@@ -147,19 +146,14 @@ public class AppGraphService {
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Project with id " + projectId + " not found"));  
     }     
     
-    public App addEnvironmentToApp(Long appId, EnvironmentType envType) {
+    public void addEnvironmentToApp(Long appId, EnvironmentType envType) {
         App app = appRepository.findById(appId)
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "App with id " + appId + " not found"));
 
         Environment env = new Environment();
         env.setType(envType);
-        env = environmentRepository.save(env);
+        env.setApp(app);
+        environmentRepository.save(env);
 
-        DeployedOn deployment = new DeployedOn();
-        deployment.setEnvironment(env);
-
-        app.getDeployments().add(deployment);
-
-        return appRepository.save(app); 
     }
 }

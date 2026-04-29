@@ -87,10 +87,10 @@ public class ApiController {
     }
 
     @PostMapping("/apps/{appId}/environments")
-    public App addEnvironmentToApp(@PathVariable Long appId, @RequestBody Environment env) {
+    public void addEnvironmentToApp(@PathVariable Long appId, @RequestBody Environment env) {
         
         
-        return appGraphService.addEnvironmentToApp(appId, env.getType());
+        appGraphService.addEnvironmentToApp(appId, env.getType());
     }
     
 }
