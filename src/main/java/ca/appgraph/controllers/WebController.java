@@ -57,6 +57,7 @@ public class WebController {
 		logger.info("GET /apps/{}", appId);
 		model.addAttribute("page", "appDetails");
 		model.addAttribute("app", appGraphService.getAppById(appId));
+		model.addAttribute("upstreamApps", appGraphService.findUpstreamApps(appId));
 		return "main";
 	}
 
@@ -67,6 +68,20 @@ public class WebController {
 		return "main";
 	}
 
+	@GetMapping("/projects/{projectId}/edit")
+	public String editProject(@PathVariable Long projectId, Model model) {
+		logger.info("GET /projects/{}/edit", projectId);
+		model.addAttribute("page", "projectEdit");
+		model.addAttribute("project", appGraphService.findProjectById(projectId));
+		return "main";	
+	}
+
+	@GetMapping("/apps/new")
+	public String newApp(Model model) {
+		logger.info("GET /apps/new");
+		model.addAttribute("page", "appNew");
+		return "main";
+	}
 	
 	
 }

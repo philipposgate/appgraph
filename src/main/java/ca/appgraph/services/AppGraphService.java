@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import ca.appgraph.models.App;
+import ca.appgraph.models.AppEnvironment;
+import ca.appgraph.models.AppLite;
 import ca.appgraph.models.ConnectsTo;
-import ca.appgraph.models.Environment;
-import ca.appgraph.models.EnvironmentType;
+import ca.appgraph.models.ENV;
 import ca.appgraph.models.Project;
 import ca.appgraph.models.ProjectApp;
+import ca.appgraph.repositories.AppEnvironmentRepository;
 import ca.appgraph.repositories.AppRepository;
-import ca.appgraph.repositories.EnvironmentRepository;
 import ca.appgraph.repositories.ProjectRepository;
 
 @Service
@@ -27,7 +28,7 @@ public class AppGraphService {
     private AppRepository appRepository;
 
     @Autowired
-    private EnvironmentRepository environmentRepository;
+    private AppEnvironmentRepository appEnvironmentRepository;
 
     public String getModelName() {
         return "Default model";
@@ -124,19 +125,24 @@ public class AppGraphService {
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Project with id " + projectId + " not found"));  
     }     
     
-    public void addEnvironmentToApp(Long appId, EnvironmentType envType) {
+    public void addEnvironmentToApp(Long appId, ENV envType) {
         App app = appRepository.findById(appId)
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "App with id " + appId + " not found"));
 
-        Environment env = new Environment();
-        env.setType(envType);
+        AppEnvironment env = new AppEnvironment();
+        env.setEnv(envType);
         env.setApp(app);
-        environmentRepository.save(env);
+        appEnvironmentRepository.save(env);
 
     }
 
     public Project findProjectById(Long projectId) {
         return projectRepository.findById(projectId)
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Project with id " + projectId + " not found"));
+    }
+
+
+    public List<AppLite> findUpstreamApps(Long appId) {
+        return appRepository.findUpstreamApps(appId);
     }
 }

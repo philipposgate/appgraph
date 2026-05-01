@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.appgraph.models.App;
-import ca.appgraph.models.Environment;
+import ca.appgraph.models.AppEnvironment;
 import ca.appgraph.models.Project;
 import ca.appgraph.services.AppGraphService;
 
@@ -87,10 +87,10 @@ public class ApiController {
     }
 
     @PostMapping("/apps/{appId}/environments")
-    public void addEnvironmentToApp(@PathVariable Long appId, @RequestBody Environment env) {
+    public void addEnvironmentToApp(@PathVariable Long appId, @RequestBody AppEnvironment env) {
         
         
-        appGraphService.addEnvironmentToApp(appId, env.getType());
+        appGraphService.addEnvironmentToApp(appId, env.getEnv());
     }
     
 }

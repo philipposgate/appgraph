@@ -3,19 +3,21 @@ package ca.appgraph.models;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Node("ENV")
-@JsonPropertyOrder({ "id", "type", "app" })
-public class Environment {
+@JsonPropertyOrder({ "id", "env", "app" })
+public class AppEnvironment {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private EnvironmentType type;
+    @Property("type")
+    private ENV env;
 
     @Relationship(type = "ENV_FOR", direction = Relationship.Direction.OUTGOING)
     private App app;
@@ -28,12 +30,12 @@ public class Environment {
         this.id = id;
     }
 
-    public EnvironmentType getType() {
-        return type;
+    public ENV getEnv() {
+        return env;
     }
 
-    public void setType(EnvironmentType type) {
-        this.type = type;
+    public void setEnv(ENV type) {
+        this.env = type;
     }
 
     public App getApp() {

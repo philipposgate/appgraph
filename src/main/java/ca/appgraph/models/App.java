@@ -18,7 +18,7 @@ public class App {
     private Long id;
 
     private String name;
-    
+
     @Relationship(type = "CONNECTS_TO", direction = Relationship.Direction.OUTGOING)
     private List<ConnectsTo> connectsTo;
 
@@ -52,6 +52,7 @@ public class App {
     public void setConnectsTo(List<ConnectsTo> connectsTos) {
         this.connectsTo = connectsTos;
     }
+
 
 
 
