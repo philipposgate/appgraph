@@ -3,5 +3,5 @@ content-type: application/json
 Accept: application/json
 
 {
-    "name": "kafka"
+    "name": "EmpPortal"
 }

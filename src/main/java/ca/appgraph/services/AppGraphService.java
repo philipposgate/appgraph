@@ -1,7 +1,6 @@
 package ca.appgraph.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -34,9 +33,6 @@ public class AppGraphService {
         return "Default model";
     }
 
-    public Optional<App> findAppById(Long id) {
-        return appRepository.findById(id);
-    }
 
     public App createApp(String name) {
         App app = new App();
@@ -53,18 +49,13 @@ public class AppGraphService {
     }
 
     public void addAppConnection(Long fromId, Long toId) {
-        Optional<App> fromOptional = findAppById(fromId);
-        Optional<App> toOptional = findAppById(toId);
+        App from = getAppById(fromId);
+        App to = getAppById(toId);
 
-        if (fromOptional.isEmpty()) {
-            throw new ResponseStatusException(NOT_FOUND, "App with id " + fromId + " not found");
-        }
-        else if (toOptional.isEmpty()) {
-            throw new ResponseStatusException(NOT_FOUND, "App with id " + toId + " not found");
+        if (from.getConnectsTo().stream().anyMatch(connection -> connection.getApp().getId().equals(toId))) {
+            throw new ResponseStatusException(NOT_FOUND, "Connection already exists");
         }
         else {
-            App from = fromOptional.get();
-            App to = toOptional.get();
 
             if (from.getConnectsTo().stream().anyMatch(connection -> connection.getApp().getId().equals(toId))) {
                 throw new ResponseStatusException(NOT_FOUND, "Connection already exists");
@@ -83,26 +74,13 @@ public class AppGraphService {
     }
 
     public void deleteApp(Long id) {
-        Optional<App> appOptional = findAppById(id);
-
-        if (appOptional.isEmpty()) {
-            throw new RuntimeException("App with id " + id + " not found");
-        }
-        else {
-            appRepository.delete(appOptional.get());
-        }
+        App app = getAppById(id);
+        appRepository.delete(app);
     }
 
     public App getAppById(Long id) {
-        Optional<App> appOptional = findAppById(id);
-
-        if (appOptional.isEmpty()) {
-            throw new ResponseStatusException(NOT_FOUND, "App with id " + id + " not found");
-        }
-        else {
-            return appOptional.get();
-        }
-    }
+        return appRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "App with id " + id + " not found"));
+   }
 
     public Project  createProject(String name) {
         Project project = new Project();
@@ -155,5 +133,10 @@ public class AppGraphService {
         env.setApp(app);
         environmentRepository.save(env);
 
+    }
+
+    public Project findProjectById(Long projectId) {
+        return projectRepository.findById(projectId)
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Project with id " + projectId + " not found"));
     }
 }

@@ -2,20 +2,71 @@ package ca.appgraph.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import ca.appgraph.services.AppGraphService;
+
+
+
 
 @Controller
 public class WebController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebController.class);
 
+    @Autowired
+    private AppGraphService appGraphService;
+
     @GetMapping("/")
 	public String home(Model model) {
 		logger.info("GET /");
-        model.addAttribute("page", "home"); 
+        model.addAttribute("page", "projects"); 
+		model.addAttribute("projects", appGraphService.findAllProjects());
 		return "main";
 	}
 
+    @GetMapping("/about")
+	public String about(Model model) {
+		logger.info("GET /about");
+        model.addAttribute("page", "about"); 
+		return "main";
+	}
+
+	@GetMapping("/projects/{projectId}")
+	public String getProjectDetails(@PathVariable Long projectId, Model model) {
+		logger.info("GET /projects/{}", projectId);
+        model.addAttribute("page", "projectDetails"); 
+		model.addAttribute("project", appGraphService.findProjectById(projectId));
+		return "main";
+	}
+	
+	@GetMapping("/apps")
+	public String getApps(Model model) {
+		logger.info("GET /apps");
+		model.addAttribute("page", "apps");
+		model.addAttribute("apps", appGraphService.findAllApps());
+		return "main";
+	}
+
+	@GetMapping("/apps/{appId}")
+	public String getAppDetails(@PathVariable Long appId, Model model) {
+		logger.info("GET /apps/{}", appId);
+		model.addAttribute("page", "appDetails");
+		model.addAttribute("app", appGraphService.getAppById(appId));
+		return "main";
+	}
+
+	@GetMapping("/projects/new")
+	public String newProject(Model model) {
+		logger.info("GET /projects/new");
+		model.addAttribute("page", "projectNew");
+		return "main";
+	}
+
+	
+	
 }
