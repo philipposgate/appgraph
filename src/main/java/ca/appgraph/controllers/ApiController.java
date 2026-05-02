@@ -93,4 +93,15 @@ public class ApiController {
         appGraphService.addEnvironmentToApp(appId, env.getEnv());
     }
     
+    @PutMapping("/projects/{projectId}")
+    public void updateProject(@PathVariable Long projectId, @RequestBody Project updatedProject) {
+
+        appGraphService.updateProject(projectId, updatedProject);
+    }
+
+    @PutMapping("/apps/{appId}")
+    public void updateApp(@PathVariable Long appId, @RequestBody App updatedApp) {
+
+        appGraphService.updateApp(appId, updatedApp);
+    }
 }

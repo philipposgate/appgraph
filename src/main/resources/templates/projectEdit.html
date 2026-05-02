@@ -1,2 +1,45 @@
-<h1 class="h2">Edit Project</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <b>edit project</b>
+            <h1 class="h2" th:text="${project.name}">Project name</h1>
+        </div>
+        <div class="col text-end">
+            <a class="btn btn-primary btn-sm mb-3" th:href="@{'/projects/' + ${project.id}}">Cancel</a>
+        </div>
+    </div>
+</div>
 <hr>
+
+<form>
+    <div class="mb-3">
+        <label for="name" class="form-label">Project Name</label>
+        <input type="text" class="form-control" id="name" aria-describedby="nameHelp" th:value="${project.name}">
+        <div id="nameHelp" class="form-text">Enter the name of the project.</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+
+    $(document).ready(function() {
+        $("form").submit(function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const name = $("#name").val();
+            $.ajax({
+                url: "/api/projects/[[${project.id}]]",
+                method: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify({ name: name }),
+                success: function(response) {
+                    alert("Project updated successfully!");
+                    window.location.href = "/projects/[[${project.id}]]";
+                },
+                error: function(xhr, status, error) {
+                    alert("Error updating project: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

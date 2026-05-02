@@ -13,6 +13,7 @@ import ca.appgraph.services.AppGraphService;
 
 
 
+
 @Controller
 public class WebController {
 
@@ -58,6 +59,7 @@ public class WebController {
 		model.addAttribute("page", "appDetails");
 		model.addAttribute("app", appGraphService.getAppById(appId));
 		model.addAttribute("upstreamApps", appGraphService.findUpstreamApps(appId));
+		model.addAttribute("project", appGraphService.findProjectByAppId(appId));
 		return "main";
 	}
 
@@ -83,5 +85,18 @@ public class WebController {
 		return "main";
 	}
 	
-	
+	@GetMapping("/graph")
+	public String graph(Model model) {
+		logger.info("GET /graph");
+		model.addAttribute("page", "graph");
+		return "main";
+	}
+
+	@GetMapping("/apps/{appId}/edit")
+	public String editApp(@PathVariable Long appId, Model model) {
+		logger.info("GET /apps/{}/edit", appId);
+		model.addAttribute("page", "appEdit");
+		model.addAttribute("app", appGraphService.getAppById(appId));
+		return "main";
+	}	
 }

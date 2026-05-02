@@ -1,1 +1,45 @@
-<h1 class="h2">Edit App</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <b>edit application</b>
+            <h1 class="h2" th:text="${app.name}">App name</h1>
+        </div>
+        <div class="col text-end">
+            <a class="btn btn-primary btn-sm mb-3" th:href="@{'/apps/' + ${app.id}}">Cancel</a>
+        </div>
+    </div>
+</div>
+<hr>
+
+<form>
+    <div class="mb-3">
+        <label for="name" class="form-label">Application Name</label>
+        <input type="text" class="form-control" id="name" aria-describedby="nameHelp" th:value="${app.name}">
+        <div id="nameHelp" class="form-text">Enter the name of the application.</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+
+    $(document).ready(function() {
+        $("form").submit(function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const name = $("#name").val();
+            $.ajax({
+                url: "/api/apps/[[${app.id}]]",
+                method: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify({ name: name }),
+                success: function(response) {
+                    alert("Application updated successfully!");
+                    window.location.href = "/apps/[[${app.id}]]";
+                },
+                error: function(xhr, status, error) {
+                    alert("Error updating application: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,27 @@
+<style>
+    #graphContainer {
+        width: 100%;
+        height: 450px;
+        background-color: #f0f0f0;
+        border-color: #c9c9c9;
+        border-width: 1px;
+        border-style: solid;
+    }
+</style>
+<div id="graphContainer">
+    <!-- NVL graph goes here -->
+</div>
+<script type="importmap">
+{
+  "imports": {
+    "@neo4j-nvl/base": "https://esm.run"
+  }
+}
+</script>
+<script type="module">
+    import { NVL } from '@neo4j-nvl/base'
+    const nodes = [{ id: '1' }, { id: '2' }]
+    const relationships = [{ id: '12', from: '1', to: '2' }]
+
+    const nvl = new NVL(document.getElementById('graphContainer'), nodes, relationships)
+</script>

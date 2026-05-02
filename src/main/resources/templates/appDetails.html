@@ -1,8 +1,15 @@
-<b>application</b>
-<h1 class="h2" th:text="${app.name}">App name</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <b>application <span th:if="${project != null}">of project: <a th:text="${project.name}" th:href="@{'/projects/' + ${project.id}}">Project Name</a></span></b>
+            <h1 class="h2" th:text="${app.name}">App name</h1>
+        </div>
+        <div class="col text-end">
+            <a class="btn btn-primary btn-sm mb-3" th:href="@{'/apps/' + ${app.id} + '/edit'}">Edit App</a>
+        </div>
+    </div>
+</div>
 <hr>
-
-
 
 <div class="container mt-5">
     <div class="row">

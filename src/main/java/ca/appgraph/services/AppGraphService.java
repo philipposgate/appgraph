@@ -1,6 +1,7 @@
 package ca.appgraph.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -144,5 +145,28 @@ public class AppGraphService {
 
     public List<AppLite> findUpstreamApps(Long appId) {
         return appRepository.findUpstreamApps(appId);
+    }
+
+    public Project findProjectByAppId(Long appId) {
+        Optional<Project> optionalProject = projectRepository.findProjectByAppId(appId);
+        return optionalProject.isPresent() ? optionalProject.get() : null;
+    }
+
+
+    public void updateProject(Long projectId, Project updatedProject) {
+        Project existingProject = getProjectById(projectId);
+        
+        existingProject.setName(updatedProject.getName());
+
+        projectRepository.save(existingProject);    
+    }
+
+
+    public void updateApp(Long appId, App updatedApp) {
+        App existingApp = getAppById(appId);
+
+        existingApp.setName(updatedApp.getName());
+
+        appRepository.save(existingApp);
     }
 }

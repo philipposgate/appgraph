@@ -1,5 +1,14 @@
-<b>project</b>
-<h1 class="h2" th:text="${project.name}">Project Name</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <b>project</b>
+            <h1 class="h2" th:text="${project.name}">Project Name</h1>
+        </div>
+        <div class="col text-end">
+            <a class="btn btn-primary btn-sm mb-3" th:href="@{'/projects/' + ${project.id} + '/edit'}">Edit Project</a>
+        </div>
+    </div>
+</div>
 <hr>
 
 <b>Applications</b>
