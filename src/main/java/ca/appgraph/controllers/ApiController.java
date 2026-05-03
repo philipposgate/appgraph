@@ -16,6 +16,7 @@ import ca.appgraph.models.App;
 import ca.appgraph.models.AppEnvironment;
 import ca.appgraph.models.Project;
 import ca.appgraph.models.cytoscape.NodeData;
+import ca.appgraph.models.select2.Select2Results;
 import ca.appgraph.services.AppGraphService;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -111,6 +112,11 @@ public class ApiController {
     @GetMapping("/graph")
     public List<Object> getGraph() {
         return appGraphService.getGraph();
+    }
+    
+    @GetMapping("/select2/apps")
+    public Select2Results getSelect2Apps() {
+        return appGraphService.getSelect2Apps();
     }
     
 }

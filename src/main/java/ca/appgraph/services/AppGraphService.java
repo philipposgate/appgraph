@@ -21,6 +21,8 @@ import ca.appgraph.models.cytoscape.Edge;
 import ca.appgraph.models.cytoscape.EdgeData;
 import ca.appgraph.models.cytoscape.Node;
 import ca.appgraph.models.cytoscape.NodeData;
+import ca.appgraph.models.select2.Select2Result;
+import ca.appgraph.models.select2.Select2Results;
 import ca.appgraph.repositories.AppEnvironmentRepository;
 import ca.appgraph.repositories.AppRepository;
 import ca.appgraph.repositories.ProjectRepository;
@@ -201,5 +203,20 @@ public class AppGraphService {
         graph.addAll(nodes);
         graph.addAll(edges);   
         return graph;
+    }
+
+
+    public Select2Results getSelect2Apps() {
+        List<App> apps = appRepository.findAll();
+        List<Select2Result> select2Results = new ArrayList<>();
+        for (App app : apps) {
+            Select2Result result = new ca.appgraph.models.select2.Select2Result();
+            result.setId(app.getId());
+            result.setText(app.getName());
+            select2Results.add(result);
+        }
+        Select2Results results = new Select2Results();
+        results.setResults(select2Results);
+        return results;
     }
 }

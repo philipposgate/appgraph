@@ -31,7 +31,7 @@
                         <b>Downstream Applications</b>
                     </div>
                     <div class="col text-end">
-                        <a class="btn btn-primary btn-circle" th:href="@{'/apps/' + ${app.id} + '/addDownstreamApp'}"><i class="bi bi-plus"></i></a>
+                        <button class="btn btn-primary btn-circle" data-bs-toggle="modal" data-bs-target="#selectAppModal"><i class="bi bi-plus"></i></button>
                     </div>
                 </div>
             </div>
@@ -46,3 +46,23 @@
         </div>
     </div>
 </div>
+
+<div th:replace="selectAppModal"></div>
+
+<script>
+    function onAppSelected(appData) {
+        var url = '/api/apps/[[${app.id}]]/connect/' + appData.id;
+        $.ajax({
+            url: url,
+            method: 'PUT',
+            contentType: 'application/json',
+            success: function () {
+                alert('App connected successfully to: ' + appData.text);
+                location.reload();
+            },
+            error: function () {
+                alert('Failed to connect app');
+            }
+        });
+    }
+</script>
