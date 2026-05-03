@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.appgraph.models.App;
 import ca.appgraph.models.AppEnvironment;
 import ca.appgraph.models.Project;
+import ca.appgraph.models.cytoscape.NodeData;
 import ca.appgraph.services.AppGraphService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -104,4 +107,10 @@ public class ApiController {
 
         appGraphService.updateApp(appId, updatedApp);
     }
+
+    @GetMapping("/graph")
+    public List<Object> getGraph() {
+        return appGraphService.getGraph();
+    }
+    
 }

@@ -14,7 +14,7 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-6">
-            <b>Connections from Upstream Applications:</b>
+            <b>Upstream Applications</b>
             <table class="table table-hover">
                 <tbody>
                     <tr th:each="app : ${upstreamApps}" th:onclick="|window.location.href='/apps/' + ${app.id}|"
@@ -25,7 +25,16 @@
             </table>
         </div>
         <div class="col-md-6">
-            <b>Connections to Downstream Applications:</b>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <b>Downstream Applications</b>
+                    </div>
+                    <div class="col text-end">
+                        <a class="btn btn-primary btn-circle" th:href="@{'/apps/' + ${app.id} + '/addDownstreamApp'}"><i class="bi bi-plus"></i></a>
+                    </div>
+                </div>
+            </div>
             <table class="table table-hover">
                 <tbody>
                     <tr th:each="connectsTo : ${app.connectsTo}"

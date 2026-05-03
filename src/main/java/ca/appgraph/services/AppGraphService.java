@@ -1,5 +1,7 @@
 package ca.appgraph.services;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +17,10 @@ import ca.appgraph.models.ConnectsTo;
 import ca.appgraph.models.ENV;
 import ca.appgraph.models.Project;
 import ca.appgraph.models.ProjectApp;
+import ca.appgraph.models.cytoscape.Edge;
+import ca.appgraph.models.cytoscape.EdgeData;
+import ca.appgraph.models.cytoscape.Node;
+import ca.appgraph.models.cytoscape.NodeData;
 import ca.appgraph.repositories.AppEnvironmentRepository;
 import ca.appgraph.repositories.AppRepository;
 import ca.appgraph.repositories.ProjectRepository;
@@ -168,5 +174,32 @@ public class AppGraphService {
         existingApp.setName(updatedApp.getName());
 
         appRepository.save(existingApp);
+    }
+
+
+    public List<Object> getGraph() {
+        List<Object> graph = new LinkedList<>();
+        List<Node> nodes = new ArrayList<>();
+        List<Edge> edges = new ArrayList<>();
+        List<App> apps = appRepository.findAll();
+
+
+        for (App app : apps) {
+            NodeData nodeData = new NodeData(app.getId().toString(), app.getName());
+            Node node = new Node();
+            node.setData(nodeData);
+            nodes.add(node);
+            if (app.getConnectsTo() != null) {
+                for (ConnectsTo connection : app.getConnectsTo()) {
+                    EdgeData edgeData = new EdgeData("r" + connection.getId().toString(), app.getId().toString(), connection.getApp().getId().toString(), "CONNECTS TO");
+                    Edge edge = new Edge();
+                    edge.setData(edgeData);
+                    edges.add(edge);
+                }
+            }   
+        }
+        graph.addAll(nodes);
+        graph.addAll(edges);   
+        return graph;
     }
 }

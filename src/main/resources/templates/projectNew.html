@@ -1,8 +1,18 @@
-<h1 class="h2">Create New Project</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h1 class="h2">Create New Project</h1>
+        </div>
+        <div class="col text-end">
+            <a class="btn btn-primary btn-sm mb-3" th:href="@{'/'}">Cancel</a>
+        </div>
+    </div>
+</div>
 <hr>
 
+
 <form>
-    <div class="mb-3">
+    <div class="form-group">
         <label for="name" class="form-label">Project Name</label>
         <input type="text" class="form-control" id="name" aria-describedby="nameHelp">
         <div id="nameHelp" class="form-text">Enter the name of the project.</div>

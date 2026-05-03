@@ -11,7 +11,17 @@
 </div>
 <hr>
 
-<b>Applications</b>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <b>Applications</b>
+        </div>
+        <div class="col text-end">
+            <a class="btn btn-primary btn-circle" th:href="@{'/projects/' + ${project.id} + '/addApplication'}"><i class="bi bi-plus"></i></a>
+        </div>
+    </div>
+</div>
+
 <table class="table table-hover">
     <tbody>
         <tr th:each="projectApp : ${project.apps}" th:onclick="|window.location.href='/apps/' + ${projectApp.app.id}|" style="cursor: pointer;">

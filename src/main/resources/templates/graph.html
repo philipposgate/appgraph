@@ -10,18 +10,55 @@
 </style>
 <div id="graphContainer">
     <!-- NVL graph goes here -->
-</div>
-<script type="importmap">
-{
-  "imports": {
-    "@neo4j-nvl/base": "https://esm.run"
-  }
-}
+</div>  
+<script src="/cytoscape/cytoscape.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: "/api/graph",
+            method: "GET",
+            success: function(graphData) {
+                const cy = cytoscape({
+                    container: document.getElementById('graphContainer'),
+                    elements: graphData,
+                    style: [
+                        {
+                            selector: 'node',
+                            style: {
+                                'label': 'data(label)',
+                                'background-color': '#007bff',
+                                'color': '#fff',
+                                'text-valign': 'center',
+                                'text-halign': 'center',
+                                'width': '60px',
+                                'height': '60px',
+                                'font-size': '12px'
+                            }
+                        },
+                        {
+                            selector: 'edge',
+                            style: {
+                                'label': 'data(label)',
+                                'width': 1,
+                                'line-color': '#000000',
+                                'curve-style': 'bezier',
+                                'target-arrow-color': '#000000',
+                                'target-arrow-shape': 'triangle'
+                            }
+                        }
+                    ],
+                    layout: {
+                        name: 'random',
+                        directed: true,
+                        padding: 10
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                alert("Error loading graph data: " + xhr.responseText);
+            }
+        });
+    });
 </script>
-<script type="module">
-    import { NVL } from '@neo4j-nvl/base'
-    const nodes = [{ id: '1' }, { id: '2' }]
-    const relationships = [{ id: '12', from: '1', to: '2' }]
+    
 
-    const nvl = new NVL(document.getElementById('graphContainer'), nodes, relationships)
-</script>
