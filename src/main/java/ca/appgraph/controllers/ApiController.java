@@ -15,13 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.appgraph.models.App;
 import ca.appgraph.models.AppEnvironment;
 import ca.appgraph.models.Project;
-import ca.appgraph.models.cytoscape.NodeData;
 import ca.appgraph.models.select2.Select2Results;
 import ca.appgraph.services.AppGraphService;
-import org.springframework.web.bind.annotation.RequestParam;
-
-
-
 
 @RestController
 @RequestMapping("/api")
@@ -45,14 +40,19 @@ public class ApiController {
         return appGraphService.findAllApps();
     }
 
-    @GetMapping("/apps/search")    
+    @GetMapping("/apps/search")
     public List<App> getAppsByName(String name) {
         return appGraphService.findAppsByName(name);
-    }   
+    }
 
     @PutMapping("/apps/{fromId}/connect/{toId}")
     public void addAppConnection(@PathVariable Long fromId, @PathVariable Long toId) {
         appGraphService.addAppConnection(fromId, toId);
+    }
+
+    @DeleteMapping("/apps/{fromId}/connect/{toId}")
+    public void removeAppConnection(@PathVariable Long fromId, @PathVariable Long toId) {
+        appGraphService.removeAppConnection(fromId, toId);
     }
 
     @DeleteMapping("/apps/{id}")
@@ -69,7 +69,7 @@ public class ApiController {
     public Iterable<Project> getProjects() {
         return appGraphService.findAllProjects();
     }
-    
+
     @PostMapping("/projects")
     public Project createProject(@RequestBody Project project) {
         return appGraphService.createProject(project.getName());
@@ -78,6 +78,11 @@ public class ApiController {
     @PutMapping("/projects/{projectId}/apps/{appId}")
     public void addAppToProject(@PathVariable Long projectId, @PathVariable Long appId) {
         appGraphService.addAppToProject(projectId, appId);
+    }
+
+    @DeleteMapping("/projects/{projectId}/apps/{appId}")
+    public void removeAppFromProject(@PathVariable Long projectId, @PathVariable Long appId) {
+        appGraphService.removeAppFromProject(projectId, appId);
     }
 
     @DeleteMapping("/projects/{projectId}")
@@ -92,11 +97,10 @@ public class ApiController {
 
     @PostMapping("/apps/{appId}/environments")
     public void addEnvironmentToApp(@PathVariable Long appId, @RequestBody AppEnvironment env) {
-        
-        
+
         appGraphService.addEnvironmentToApp(appId, env.getEnv());
     }
-    
+
     @PutMapping("/projects/{projectId}")
     public void updateProject(@PathVariable Long projectId, @RequestBody Project updatedProject) {
 
@@ -113,10 +117,15 @@ public class ApiController {
     public List<Object> getGraph() {
         return appGraphService.getGraph();
     }
-    
+
+    @GetMapping("/graph/{appId}")
+    public List<Object> getGraph(@PathVariable Long appId) {
+        return appGraphService.getGraph(appId);
+    }
+
     @GetMapping("/select2/apps")
     public Select2Results getSelect2Apps() {
         return appGraphService.getSelect2Apps();
     }
-    
+
 }

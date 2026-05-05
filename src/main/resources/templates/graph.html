@@ -9,15 +9,22 @@
     }
 </style>
 <div id="graphContainer">
-    <!-- NVL graph goes here -->
-</div>  
+    <!-- Cytoscape graph goes here -->
+</div>
 <script src="/cytoscape/cytoscape.min.js"></script>
+<script th:if="${appId != null}">
+    var selectedAppId = [[${appId}]];
+</script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
+        var url = "/api/graph";
+        if (typeof selectedAppId !== 'undefined') {
+            url += "/" + selectedAppId;
+        }
         $.ajax({
-            url: "/api/graph",
+            url: url,
             method: "GET",
-            success: function(graphData) {
+            success: function (graphData) {
                 const cy = cytoscape({
                     container: document.getElementById('graphContainer'),
                     elements: graphData,
@@ -26,13 +33,39 @@
                             selector: 'node',
                             style: {
                                 'label': 'data(label)',
-                                'background-color': '#007bff',
+                                'background-color': '#00a6ff',
                                 'color': '#fff',
                                 'text-valign': 'center',
                                 'text-halign': 'center',
                                 'width': '60px',
                                 'height': '60px',
-                                'font-size': '12px'
+                                'font-size': '12px',
+                                'text-outline-color': '#000000',
+                                'text-outline-width': '1px',
+                                'text-outline-opacity': 1,
+                                'overlay-shape': 'ellipse',
+                                'overlay-color': '#aaaaaa'
+                            }
+                        },
+                        {
+                            selector: 'node:selected',
+                            style: {
+                                'label': 'data(label)',
+                                'background-color': '#007bff',
+                                'color': '#fff',
+                                'text-valign': 'center',
+                                'text-halign': 'center',
+                                'width': '80px',
+                                'height': '80px',
+                                'font-size': '12px',
+                                'text-outline-color': '#000000',
+                                'text-outline-width': '1px',
+                                'text-outline-opacity': 1,
+                                'overlay-shape': 'ellipse',
+                                'overlay-color': '#aaaaaa',
+                                'border-color': '#ff0000',
+                                'border-width': '3px',
+                                'border-style': 'double'
                             }
                         },
                         {
@@ -40,25 +73,33 @@
                             style: {
                                 'label': 'data(label)',
                                 'width': 1,
-                                'line-color': '#000000',
+                                'color': '#777777',
+                                'line-color': '#777777',
                                 'curve-style': 'bezier',
-                                'target-arrow-color': '#000000',
-                                'target-arrow-shape': 'triangle'
+                                'target-arrow-color': '#777777',
+                                'target-arrow-shape': 'triangle',
+                                'text-rotation': 'autorotate',
+                                'text-margin-y': 10,
+                                'font-size': '8px'
                             }
                         }
                     ],
                     layout: {
-                        name: 'random',
+                        name: 'cose',
                         directed: true,
                         padding: 10
                     }
                 });
+                cy.on('tap', 'node', function (evt) {
+                    let node = evt.target;
+                    if (node.selected()) {
+                        window.location.href = '/apps/' + node.id();
+                    }
+                });
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 alert("Error loading graph data: " + xhr.responseText);
             }
         });
     });
 </script>
-    
-

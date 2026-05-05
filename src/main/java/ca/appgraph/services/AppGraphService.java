@@ -57,7 +57,7 @@ public class AppGraphService {
     public List<App> findAppsByName(String name) {
         return appRepository.findByName(name);
     }
-
+    
     public void addAppConnection(Long fromId, Long toId) {
         App from = getAppById(fromId);
         App to = getAppById(toId);
@@ -67,10 +67,7 @@ public class AppGraphService {
         }
         else {
 
-            if (from.getConnectsTo().stream().anyMatch(connection -> connection.getApp().getId().equals(toId))) {
-                throw new ResponseStatusException(NOT_FOUND, "Connection already exists");
-            }
-
+     
             ConnectsTo connection = new ConnectsTo();
             connection.setApp(to);
 
@@ -82,6 +79,17 @@ public class AppGraphService {
             appRepository.save(from);
         }
     }
+
+    public void removeAppConnection(Long fromId, Long toId) {
+        App from = getAppById(fromId);
+
+        if (from.getConnectsTo() != null) {
+            from.getConnectsTo().removeIf(connection -> connection.getApp().getId().equals(toId));
+            appRepository.save(from);
+        }
+    }
+
+
 
     public void deleteApp(Long id) {
         App app = getAppById(id);
@@ -178,8 +186,11 @@ public class AppGraphService {
         appRepository.save(existingApp);
     }
 
-
     public List<Object> getGraph() {
+        return getGraph(null);
+    }
+
+    public List<Object> getGraph(Long appId) {
         List<Object> graph = new LinkedList<>();
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
@@ -190,6 +201,7 @@ public class AppGraphService {
             NodeData nodeData = new NodeData(app.getId().toString(), app.getName());
             Node node = new Node();
             node.setData(nodeData);
+            node.setSelected(appId != null && app.getId().equals(appId));
             nodes.add(node);
             if (app.getConnectsTo() != null) {
                 for (ConnectsTo connection : app.getConnectsTo()) {
@@ -219,4 +231,13 @@ public class AppGraphService {
         results.setResults(select2Results);
         return results;
     }
+    
+    public void removeAppFromProject(Long projectId, Long appId) {
+        Project project = getProjectById(projectId);
+
+        if (project.getApps() != null) {
+            project.getApps().removeIf(pa -> pa.getApp().getId().equals(appId));
+            projectRepository.save(project);
+        }
+    }       
 }

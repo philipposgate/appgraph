@@ -5,7 +5,8 @@
             <h1 class="h2" th:text="${project.name}">Project Name</h1>
         </div>
         <div class="col text-end">
-            <a class="btn btn-primary btn-sm mb-3" th:href="@{'/projects/' + ${project.id} + '/edit'}">Edit Project</a>
+            <a class="btn btn-primary btn-sm mb-3" th:href="@{'/projects/' + ${project.id} + '/edit'}"><i class="bi bi-pencil-square"></i></a>
+            <button class="btn btn-danger btn-sm mb-3"><i class="bi bi-trash"></i></button>
         </div>
     </div>
 </div>
@@ -17,15 +18,22 @@
             <b>Applications</b>
         </div>
         <div class="col text-end">
-            <button class="btn btn-primary btn-circle" data-bs-toggle="modal" data-bs-target="#selectAppModal"><i class="bi bi-plus"></i></button>
+            <button class="btn btn-primary btn-circle" data-bs-toggle="modal" data-bs-target="#selectAppModal"><i
+                    class="bi bi-plus"></i></button>
         </div>
     </div>
 </div>
 
 <table class="table table-hover">
     <tbody>
-        <tr th:each="projectApp : ${project.apps}" th:onclick="|window.location.href='/apps/' + ${projectApp.app.id}|" style="cursor: pointer;">
+        <tr th:each="projectApp : ${project.apps}" th:onclick="|window.location.href='/apps/' + ${projectApp.app.id}|"
+            style="cursor: pointer;">
             <td th:text="${projectApp.app.name}">App Name</td>
+            <td class="text-end">
+                <button class="btn btn-secondary btn-circle removeAppFromProject"
+                    th:attr="data-app-id=${projectApp.app.id}"><i class="bi bi-trash"></i></button>
+            </td>
+
         </tr>
     </tbody>
 </table>
@@ -40,7 +48,6 @@
             method: 'PUT',
             contentType: 'application/json',
             success: function () {
-                alert('App successfully added: ' + appData.text);
                 location.reload();
             },
             error: function () {
@@ -48,4 +55,24 @@
             }
         });
     }
+
+    $(document).ready(function () {
+        $('.removeAppFromProject').click(function (event) {
+            event.stopPropagation();
+            if (confirm('Are you sure you want to remove this app from the project?')) {
+                var appId = $(this).data('app-id');
+                var url = '/api/projects/[[${project.id}]]/apps/' + appId;
+                $.ajax({
+                    url: url,
+                    method: 'DELETE',
+                    success: function () {
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('Failed to remove app');
+                    }
+                });
+            }
+        });
+    });
 </script>

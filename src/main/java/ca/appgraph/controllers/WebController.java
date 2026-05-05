@@ -10,41 +10,37 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import ca.appgraph.services.AppGraphService;
 
-
-
-
-
 @Controller
 public class WebController {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebController.class);
+	private static final Logger logger = LoggerFactory.getLogger(WebController.class);
 
-    @Autowired
-    private AppGraphService appGraphService;
+	@Autowired
+	private AppGraphService appGraphService;
 
-    @GetMapping("/")
+	@GetMapping("/")
 	public String home(Model model) {
 		logger.info("GET /");
-        model.addAttribute("page", "projects"); 
+		model.addAttribute("page", "projects");
 		model.addAttribute("projects", appGraphService.findAllProjects());
 		return "main";
 	}
 
-    @GetMapping("/about")
+	@GetMapping("/about")
 	public String about(Model model) {
 		logger.info("GET /about");
-        model.addAttribute("page", "about"); 
+		model.addAttribute("page", "about");
 		return "main";
 	}
 
 	@GetMapping("/projects/{projectId}")
 	public String getProjectDetails(@PathVariable Long projectId, Model model) {
 		logger.info("GET /projects/{}", projectId);
-        model.addAttribute("page", "projectDetails"); 
+		model.addAttribute("page", "projectDetails");
 		model.addAttribute("project", appGraphService.findProjectById(projectId));
 		return "main";
 	}
-	
+
 	@GetMapping("/apps")
 	public String getApps(Model model) {
 		logger.info("GET /apps");
@@ -75,7 +71,7 @@ public class WebController {
 		logger.info("GET /projects/{}/edit", projectId);
 		model.addAttribute("page", "projectEdit");
 		model.addAttribute("project", appGraphService.findProjectById(projectId));
-		return "main";	
+		return "main";
 	}
 
 	@GetMapping("/apps/new")
@@ -84,11 +80,19 @@ public class WebController {
 		model.addAttribute("page", "appNew");
 		return "main";
 	}
-	
+
 	@GetMapping("/graph")
 	public String graph(Model model) {
 		logger.info("GET /graph");
 		model.addAttribute("page", "graph");
+		return "main";
+	}
+
+	@GetMapping("/graph/{appId}")
+	public String graph(@PathVariable Long appId, Model model) {
+		logger.info("GET /graph/{}", appId);
+		model.addAttribute("page", "graph");
+		model.addAttribute("appId", appId);
 		return "main";
 	}
 
@@ -98,5 +102,5 @@ public class WebController {
 		model.addAttribute("page", "appEdit");
 		model.addAttribute("app", appGraphService.getAppById(appId));
 		return "main";
-	}	
+	}
 }

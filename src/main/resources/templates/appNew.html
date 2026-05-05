@@ -32,6 +32,7 @@
                 contentType: "application/json",
                 data: JSON.stringify({ name: name }),
                 success: function(response) {
+                    console.log("Application created successfully:", response);
                     alert("Application created successfully!");
                     window.location.href = "/";
                 },

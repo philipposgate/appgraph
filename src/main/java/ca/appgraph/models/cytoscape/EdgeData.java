@@ -24,4 +24,8 @@ public class EdgeData {
     public String getTarget() {
         return target;
     }
+
+    public String getLabel() {
+        return label;
+    }
 }
