@@ -34,7 +34,7 @@
                 data: JSON.stringify({ name: name }),
                 success: function(response) {
                     alert("Project created successfully!");
-                    window.location.href = "/";
+                    window.location.href = "/projects/" + response.id;
                 },
                 error: function(xhr, status, error) {
                     alert("Error creating project: " + xhr.responseText);
