@@ -9,7 +9,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Node("ENV")
-@JsonPropertyOrder({ "id", "env", "app" })
+@JsonPropertyOrder({ "id", "type", "app" })
 public class AppEnvironment {
 
     @Id
@@ -17,7 +17,7 @@ public class AppEnvironment {
     private Long id;
 
     @Property("type")
-    private ENV env;
+    private EnvironmentType type;
 
     @Relationship(type = "ENV_FOR", direction = Relationship.Direction.OUTGOING)
     private App app;
@@ -30,12 +30,12 @@ public class AppEnvironment {
         this.id = id;
     }
 
-    public ENV getEnv() {
-        return env;
+    public EnvironmentType getType() {
+        return type;
     }
 
-    public void setEnv(ENV type) {
-        this.env = type;
+    public void setType(EnvironmentType type) {
+        this.type = type;
     }
 
     public App getApp() {

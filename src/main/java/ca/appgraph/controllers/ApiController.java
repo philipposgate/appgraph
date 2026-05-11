@@ -98,7 +98,7 @@ public class ApiController {
     @PostMapping("/apps/{appId}/environments")
     public void addEnvironmentToApp(@PathVariable Long appId, @RequestBody AppEnvironment env) {
 
-        appGraphService.addEnvironmentToApp(appId, env.getEnv());
+        appGraphService.addEnvironmentToApp(appId, env.getType());
     }
 
     @PutMapping("/projects/{projectId}")

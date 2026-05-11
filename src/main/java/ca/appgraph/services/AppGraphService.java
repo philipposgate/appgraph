@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import ca.appgraph.models.App;
 import ca.appgraph.models.AppEnvironment;
 import ca.appgraph.models.AppLite;
 import ca.appgraph.models.ConnectsTo;
-import ca.appgraph.models.ENV;
+import ca.appgraph.models.EnvironmentType;
 import ca.appgraph.models.Project;
 import ca.appgraph.models.ProjectApp;
 import ca.appgraph.models.cytoscape.Edge;
@@ -142,12 +143,12 @@ public class AppGraphService {
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Project with id " + projectId + " not found"));  
     }     
     
-    public void addEnvironmentToApp(Long appId, ENV envType) {
+    public void addEnvironmentToApp(Long appId, EnvironmentType envType) {
         App app = appRepository.findById(appId)
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "App with id " + appId + " not found"));
 
         AppEnvironment env = new AppEnvironment();
-        env.setEnv(envType);
+        env.setType(envType);
         env.setApp(app);
         appEnvironmentRepository.save(env);
 
@@ -239,5 +240,10 @@ public class AppGraphService {
             project.getApps().removeIf(pa -> pa.getApp().getId().equals(appId));
             projectRepository.save(project);
         }
+    }
+
+
+    public List<AppEnvironment> findEnvironmentsByAppId(Long appId) {
+        return appEnvironmentRepository.findEnvironmentsByAppId(appId);
     }       
 }

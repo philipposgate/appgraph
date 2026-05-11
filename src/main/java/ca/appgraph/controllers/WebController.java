@@ -56,6 +56,7 @@ public class WebController {
 		model.addAttribute("app", appGraphService.getAppById(appId));
 		model.addAttribute("upstreamApps", appGraphService.findUpstreamApps(appId));
 		model.addAttribute("project", appGraphService.findProjectByAppId(appId));
+		model.addAttribute("environments", appGraphService.findEnvironmentsByAppId(appId));
 		return "main";
 	}
 

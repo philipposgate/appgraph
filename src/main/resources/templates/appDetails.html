@@ -7,7 +7,8 @@
         </div>
         <div class="col text-end">
             <a class="btn btn-info btn-sm mb-3" th:href="@{'/graph/' + ${app.id}}">Graph</a>
-            <a class="btn btn-primary btn-sm mb-3" th:href="@{'/apps/' + ${app.id} + '/edit'}"><i class="bi bi-pencil-square"></i></a>
+            <a class="btn btn-primary btn-sm mb-3" th:href="@{'/apps/' + ${app.id} + '/edit'}"><i
+                    class="bi bi-pencil-square"></i></a>
             <button id="deleteAppBtn" class="btn btn-danger btn-sm mb-3"><i class="bi bi-trash"></i></button>
         </div>
     </div>
@@ -33,7 +34,7 @@
                     <div class="col">
                         <b>Downstream Applications</b>
                     </div>
-                    <div class="col text-end">
+                    <div class="col text-end" style="padding-right: 8px;">
                         <button class="btn btn-primary btn-circle" data-bs-toggle="modal"
                             data-bs-target="#selectAppModal"><i class="bi bi-plus"></i></button>
                     </div>
@@ -51,6 +52,28 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <b>Runtime Environments</b>
+        </div>
+        <div class="col text-end">
+            <button id="addEnvBtn" class="btn btn-primary btn-circle" data-bs-toggle="popover"><i
+                    class="bi bi-plus"></i></button>
+        </div>
+    </div>
+    <div class="row mt-3" th:each="env : ${environments}">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${env.type}">Environment Type</h5>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -73,8 +96,43 @@
         });
     }
 
+    var addEnvPopover = new bootstrap.Popover(document.getElementById('addEnvBtn'), {
+        title: 'Add Runtime Environment',
+        content: `
+                <div class="d-grid gap-2">
+                    <button class="envTypeBtn btn btn-primary btn-sm">DEV</button>
+                    <button class="envTypeBtn btn btn-primary btn-sm">SIT</button>
+                    <button class="envTypeBtn btn btn-primary btn-sm">STAGE</button>
+                    <button class="envTypeBtn btn btn-primary btn-sm">PROD</button>
+                </div>
+            `,
+        html: true,
+        sanitize: false,
+        placement: 'auto',
+        trigger: 'click'
+    });
+
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('envTypeBtn')) {
+            addEnvPopover.hide();
+            var envType = e.target.textContent.trim();
+            $.ajax({
+                url: '/api/apps/[[${app.id}]]/environments',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ type: envType }),
+                success: function () {
+                    location.reload();
+                },
+                error: function () {
+                    alert('Failed to add environment');
+                }
+            });
+        }
+    });
+
     $(document).ready(function () {
-        $('.deleteDownstreamConnection').click(function (event) {
+        $('.deleteDownstreamConnection').on('click', function (event) {
             event.stopPropagation();
             if (confirm('Are you sure you want to delete this connection?')) {
                 var connectId = $(this).data('connect-id');
@@ -91,7 +149,7 @@
             }
         });
 
-        $('#deleteAppBtn').click(function () {
+        $('#deleteAppBtn').on('click', function () {
             if (confirm('Are you sure you want to delete this application?')) {
                 $.ajax({
                     url: '/api/apps/[[${app.id}]]',

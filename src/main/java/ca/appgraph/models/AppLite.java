@@ -1,8 +1,8 @@
 package ca.appgraph.models;
 
 /*
- * This is a projection interface for App, 
- * used to fetch only id and name of connected apps.
+ * This is a "neo4j projection" interface for App, 
+ * used to fetch only id and name properties of an App.
  */
 public interface AppLite {
 
