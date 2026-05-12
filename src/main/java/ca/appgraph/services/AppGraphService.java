@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import org.springframework.stereotype.Service;
@@ -244,6 +243,6 @@ public class AppGraphService {
 
 
     public List<AppEnvironment> findEnvironmentsByAppId(Long appId) {
-        return appEnvironmentRepository.findEnvironmentsByAppId(appId);
+        return appEnvironmentRepository.findEnvironmentsByAppId(appId).stream().sorted().toList();
     }       
 }

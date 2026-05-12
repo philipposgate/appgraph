@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Node("ENV")
 @JsonPropertyOrder({ "id", "type", "app" })
-public class AppEnvironment {
+public class AppEnvironment implements Comparable<AppEnvironment> {
 
     @Id
     @GeneratedValue
@@ -44,5 +44,22 @@ public class AppEnvironment {
 
     public void setApp(App app) {
         this.app = app;
+    }
+
+    @Override
+    public int compareTo(AppEnvironment other) {
+        if (other == null) {
+            return 1;
+        }
+        if (this.type == other.type) {
+            return 0;
+        }
+        if (this.type == null) {
+            return 1;
+        }
+        if (other.type == null) {
+            return -1;
+        }
+        return Integer.compare(this.type.ordinal(), other.type.ordinal());
     }
 }
