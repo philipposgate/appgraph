@@ -82,7 +82,7 @@
                     }
                 });
                 cy.on('tap', 'node', function (evt) {
-                    let node = evt.target;
+                    let node = evt.target;  
                     if (node.selected()) {
                         window.location.href = '/apps/' + node.id();
                     }

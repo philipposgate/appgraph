@@ -89,6 +89,13 @@ public class WebController {
 		return "main";
 	}
 
+	@GetMapping("/graph2")
+	public String graph2(Model model) {
+		logger.info("GET /graph2");
+		model.addAttribute("page", "graph2");
+		return "main";
+	}
+	
 	@GetMapping("/graph/{appId}")
 	public String graph(@PathVariable Long appId, Model model) {
 		logger.info("GET /graph/{}", appId);

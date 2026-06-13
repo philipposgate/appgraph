@@ -1,0 +1,127 @@
+<style>
+    #graphContainer {
+        width: 100%;
+        height: 450px;
+        background-color: #f0f0f0;
+        border-color: #c9c9c9;
+        border-width: 1px;
+        border-style: solid;
+    }
+</style>
+<div id="graphContainer">
+    <!-- Cytoscape graph goes here -->
+</div>
+<script src="/cytoscape/cytoscape.min.js"></script>
+<script th:if="${appId != null}">
+    var selectedAppId = [[${ appId }]];
+</script>
+<script>
+    var cy;
+
+    function initGraph(graphData) {
+        cy = cytoscape({
+            container: document.getElementById('graphContainer'),
+            elements: graphData,
+            style: [
+                {
+                    selector: 'node',
+                    style: {
+                        'label': 'data(label)',
+                        'background-color': '#00a6ff',
+                        'color': '#fff',
+                        'text-valign': 'center',
+                        'text-halign': 'center',
+                        'width': '60px',
+                        'height': '60px',
+                        'font-size': '12px',
+                        'text-outline-color': '#000000',
+                        'text-outline-width': '1px',
+                        'text-outline-opacity': 1,
+                        'overlay-shape': 'ellipse',
+                        'overlay-color': '#aaaaaa'
+                    }
+                },
+                {
+                    selector: 'node:selected',
+                    style: {
+                        'background-color': '#007bff',
+                        'width': '80px',
+                        'height': '80px',
+                        'font-size': '12px',
+                        'border-color': '#ff0000',
+                        'border-width': '3px',
+                        'border-style': 'double'
+                    }
+                },
+                {
+                    selector: 'edge',
+                    style: {
+                        'label': 'data(label)',
+                        'width': 1,
+                        'color': '#777777',
+                        'line-color': '#777777',
+                        'curve-style': 'bezier',
+                        'target-arrow-color': '#777777',
+                        'target-arrow-shape': 'triangle',
+                        'text-rotation': 'autorotate',
+                        'text-margin-y': 10,
+                        'font-size': '8px'
+                    }
+                }
+            ],
+            layout: {
+                name: 'cose',
+                directed: true,
+                padding: 10
+            }
+        });
+        cy.on('tap', function (evt) {
+            let target = evt.target;
+
+            if (target === cy) {
+                // Tap on background - reset view
+                cy.animate({
+                    fit: {
+                        eles: cy.elements(), // Elements to fit (can be a subset)
+                        padding: 20          // Space around the elements
+                    },
+                    duration: 1000,         // Animation length in milliseconds
+                    easing: 'ease-in-out'     // Pacing of the animation
+                });
+            } else {
+                console.log('Tap on an element (node or edge)');
+                console.log("Node clicked: " + target.id() + " - " + target.data('label'));
+                console.log("Node position: ", target.position());
+                console.log("Node incomers: ", target.incomers().nodes());
+                console.log("Node outgoers: ", target.outgoers().nodes());
+
+                cy.animate({
+                    center: { eles: target },
+                    duration: 1000,
+                    easing: 'ease-in-out'
+                });
+
+                if (target.selected()) {
+                    window.location.href = '/apps/' + target.id();
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        var url = "/api/graph";
+        if (typeof selectedAppId !== 'undefined') {
+            url += "/" + selectedAppId;
+        }
+        $.ajax({
+            url: url,
+            method: "GET",
+            success: function (graphData) {
+                initGraph(graphData);
+            },
+            error: function (xhr, status, error) {
+                alert("Error loading graph data: " + xhr.responseText);
+            }
+        });
+    });
+</script>
